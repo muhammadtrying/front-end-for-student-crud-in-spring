@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>STUDENT - CRUD</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="studentTableBody">
+
+    </tbody>
+</table>
+
+</body>
+</html>
+<script>
+    function get() {
+        fetch("http://localhost:8080/")
+            .then(res => res.json())
+            .then(students => {
+                const studentTableBody = document.getElementById("studentTableBody");
+                studentTableBody.innerHTML = '';
+                students.forEach(student => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.firstName}</td>
+                    <td>${student.lastName}</td>
+                    <td><button class="btn btn-danger" onclick="deleteItem(${student.id})">Delete</button></td>
+                `;
+                    studentTableBody.appendChild(row);
+                });
+            })
+    }
+
+    get();
+
+    function deleteItem(id) {
+        fetch("http://localhost:8080/" + id, {method: "DELETE"})
+            .then(() => {
+                get();
+            })
+    }
+</script>
